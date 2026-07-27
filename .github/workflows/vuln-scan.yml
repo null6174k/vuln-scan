@@ -1,0 +1,37 @@
+name: Vulnerability Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Weekly, since new CVEs get published against unchanged code.
+    - cron: '0 6 * * 1'
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install vuln-scan
+        run: npm install --global vuln-scan
+        # If you haven't published this tool to npm yet, replace the step
+        # above with a checkout of the tool's repo + `npm link`, e.g.:
+        #   - uses: actions/checkout@v4
+        #     with: { repository: <you>/vuln-scanner, path: vuln-scanner }
+        #   - run: cd vuln-scanner && npm install && npm link
+
+      - name: Run scan (report-only)
+        run: vuln-scan . --json vuln-report.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vuln-report
+          path: vuln-report.json

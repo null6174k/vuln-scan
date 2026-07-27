@@ -1,0 +1,16 @@
+{
+  "name": "vuln-scan",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Auto-detects npm/pip/cargo/go projects and audits for known vulnerabilities, preferring non-breaking overrides over forced major bumps.",
+  "bin": {
+    "vuln-scan": "bin/scan.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}
