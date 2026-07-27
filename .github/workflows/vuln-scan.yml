@@ -18,16 +18,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install vuln-scan
-        run: npm install --global vuln-scan
-        # If you haven't published this tool to npm yet, replace the step
-        # above with a checkout of the tool's repo + `npm link`, e.g.:
-        #   - uses: actions/checkout@v4
-        #     with: { repository: <you>/vuln-scanner, path: vuln-scanner }
-        #   - run: cd vuln-scanner && npm install && npm link
-
       - name: Run scan (report-only)
-        run: vuln-scan . --json vuln-report.json
+        run: node bin/scan.mjs . --json vuln-report.json
+        # This repo IS vuln-scan, and it's already checked out above — so
+        # this dogfoods the tool against itself, no install/publish step
+        # needed. If you copy this workflow into a *different* repo that
+        # wants to use vuln-scan, check this repo out as a sibling and
+        # point at its bin/scan.mjs instead, e.g.:
+        #   - uses: actions/checkout@v4
+        #     with: { repository: null6174k/vuln-scan, path: vuln-scan }
+        #   - run: node vuln-scan/bin/scan.mjs . --json vuln-report.json
 
       - name: Upload report
         if: always()
